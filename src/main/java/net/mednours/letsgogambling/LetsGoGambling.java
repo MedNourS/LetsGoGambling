@@ -2,6 +2,7 @@ package net.mednours.letsgogambling;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.mednours.letsgogambling.item.ModItemGroups;
 import net.mednours.letsgogambling.item.ModItems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ public class LetsGoGambling implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-
+		ModItemGroups.registerItemGroups();
 		ModItems.registerModItems();
 	}
 }

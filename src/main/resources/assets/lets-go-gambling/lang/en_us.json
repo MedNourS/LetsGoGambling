@@ -6,5 +6,7 @@
   "item.lets-go-gambling.gold_coin": "Gold Coin",
   "item.lets-go-gambling.diamond_coin": "Diamond Coin",
   "item.lets-go-gambling.emerald_coin": "Emerald Coin",
-  "item.lets-go-gambling.netherite_coin": "Netherite Coin"
+  "item.lets-go-gambling.netherite_coin": "Netherite Coin",
+
+  "itemGroup.lets-go-gambling.lets_go_gambling_group": "Let's Go Gambling!"
 }
