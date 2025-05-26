@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "lets-go-gambling",
+	"version": "${version}",
+	"name": "Let's Go Gambling!",
+	"description": "Gambling in Minecraft, what could go wrong?",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/MedNourS/lets-go-gambling"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/lets-go-gambling/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.mednours.letsgogambling.LetsGoGambling"
+		],
+		"fabric-datagen": [
+			"net.mednours.letsgogambling.LetsGoGamblingDataGenerator"
+		],
+		"client": [
+			"net.mednours.letsgogambling.LetsGoGamblingClient"
+		]
+	},
+	"mixins": [
+		"lets-go-gambling.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
