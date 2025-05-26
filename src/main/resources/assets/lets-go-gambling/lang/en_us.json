@@ -8,5 +8,7 @@
   "item.lets-go-gambling.emerald_coin": "Emerald Coin",
   "item.lets-go-gambling.netherite_coin": "Netherite Coin",
 
-  "itemGroup.lets-go-gambling.lets_go_gambling_group": "Let's Go Gambling!"
+  "itemGroup.lets-go-gambling.lets_go_gambling_group": "Let's Go Gambling!",
+
+  "tooltip.lets-go-gambling.coin": "Feelin' §glucky§r?"
 }
