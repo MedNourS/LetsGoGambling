@@ -1,0 +1,22 @@
+{
+  "coin_hold": {
+    "sounds": [
+      "lets-go-gambling:coin_hold"
+    ]
+  },
+  "coin_success1": {
+    "sounds": [
+      "lets-go-gambling:coin_success1"
+    ]
+  },
+    "coin_success2": {
+        "sounds": [
+        "lets-go-gambling:coin_success2"
+        ]
+    },
+  "coin_fail": {
+    "sounds": [
+      "lets-go-gambling:coin_fail"
+    ]
+  }
+}

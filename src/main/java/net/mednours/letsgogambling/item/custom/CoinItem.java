@@ -1,5 +1,7 @@
 package net.mednours.letsgogambling.item.custom;
 
+import net.mednours.letsgogambling.sounds.ModSounds;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -29,6 +31,7 @@ public class CoinItem extends Item {
     }
 
     Integer streak = 0;
+    boolean wasHoldingCoin = false;
 
     private static final Set<RegistryEntry<StatusEffect>> REMOVABLE_EFFECTS = Set.of(
         StatusEffects.SPEED,
@@ -41,6 +44,34 @@ public class CoinItem extends Item {
         StatusEffects.ABSORPTION
     );
 
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        if (!world.isClient && entity instanceof PlayerEntity player) {
+            boolean isHoldingCoin = player.getMainHandStack() == stack || player.getOffHandStack() == stack;
+
+            if (isHoldingCoin && !wasHoldingCoin) {
+                world.playSound(
+                        null,
+                        player.getBlockPos(),
+                        ModSounds.COIN_HOLD_EVENT,
+                        player.getSoundCategory(),
+                        0.25f,
+                        1.0f
+                );
+            }
+
+            wasHoldingCoin = isHoldingCoin;
+        }
+
+        super.inventoryTick(stack, world, entity, slot, selected);
+    }
+
+    /**
+     * When the coin is used, it will roll a chance based on the coin type and streak.
+     * If successful, it will apply a positive effect and give items.
+     * If failed, it will remove positive effects, take valuable items, apply negative effects,
+     * and possibly spawn a hostile mob.
+     */
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 
@@ -140,6 +171,27 @@ public class CoinItem extends Item {
                     }
                 }
 
+                // Play the success sound effect
+                if (Math.random() < 0.5) {
+                    world.playSound(
+                            null,
+                            user.getBlockPos(),
+                            ModSounds.COIN_SUCCESS_1_EVENT,
+                            user.getSoundCategory(),
+                            0.25f,
+                            1.0f
+                    );
+                } else {
+                    world.playSound(
+                            null,
+                            user.getBlockPos(),
+                            ModSounds.COIN_SUCCESS_2_EVENT,
+                            user.getSoundCategory(),
+                            0.25f,
+                            1.0f
+                    );
+                }
+
                 user.sendMessage(Text.literal("Success! Streak: " + streak), true);
 
             } else {
@@ -220,11 +272,16 @@ public class CoinItem extends Item {
                         user.sendMessage(Text.literal("Failure! Streak lost. A valuable item was taken."), true);
                     }
                 } else {
-                    // No valuable item found, coin always breaks
-                    if (stack.getCount() > 0) {
-                        stack.decrement(1);
-                        user.sendMessage(Text.literal("The coin broke! Streak lost."), true);
+                    // No valuable item found, coin tries to break
+                    if (Math.random() < failureStreakScale*3) {
+                        if (stack.getCount() > 0) {
+                            stack.decrement(1);
+                            user.sendMessage(Text.literal("The coin broke! Streak lost."), true);
+                        }
+                    } else {
+                        user.sendMessage(Text.literal("Failure! Streak lost. No valuable item was found."), true);
                     }
+
                 }
 
                 /*
@@ -238,7 +295,6 @@ public class CoinItem extends Item {
                     new StatusEffectInstance(StatusEffects.POISON, duration, amp),
                     new StatusEffectInstance(StatusEffects.WEAKNESS, duration, amp),
                     new StatusEffectInstance(StatusEffects.SLOWNESS, duration, amp),
-                    new StatusEffectInstance(StatusEffects.UNLUCK, duration, amp),
                     new StatusEffectInstance(StatusEffects.NAUSEA, duration, amp),
                     new StatusEffectInstance(StatusEffects.BLINDNESS, duration, amp),
                     new StatusEffectInstance(StatusEffects.MINING_FATIGUE, duration, amp)
@@ -254,9 +310,6 @@ public class CoinItem extends Item {
                         // ... apply additional effects with a 50% chance until it fails
                     }
                 }
-
-                // And finally reset the streak
-                streak = 0;
 
                 /*
                     Negative outcome 5: Spawn a hostile mob
@@ -281,6 +334,19 @@ public class CoinItem extends Item {
                     // Spawn a random hostile mob near the player
                     randomMob.spawn((ServerWorld) world, user.getBlockPos(), SpawnReason.EVENT);
                 }
+
+                // Play the failure sound effect
+                world.playSound(
+                        null,
+                        user.getBlockPos(),
+                        ModSounds.COIN_FAIL_EVENT,
+                        user.getSoundCategory(),
+                        0.25f,
+                        1.0f
+                );
+
+                // And finally reset the streak
+                streak = 0;
             }
 
             // Print the streak to the console for debugging
@@ -290,7 +356,7 @@ public class CoinItem extends Item {
         return TypedActionResult.success(stack);
     }
 
-    /*
+    /**
     When the coin is used on a block, it will reset the streak, reducing the impact of the negative effects.
      */
     @Override
