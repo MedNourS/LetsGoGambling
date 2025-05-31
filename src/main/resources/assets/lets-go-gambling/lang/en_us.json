@@ -10,5 +10,8 @@
 
   "itemGroup.lets-go-gambling.lets_go_gambling_group": "Let's Go Gambling!",
 
-  "tooltip.lets-go-gambling.coin": "Feelin' §glucky§r?"
+  "tooltip.lets-go-gambling.coin": "Feelin' §glucky§r?",
+
+  "message.lets-go-gambling.coin_success": "Success!",
+  "message.lets-go-gambling.coin_failure": "Failure!"
 }
