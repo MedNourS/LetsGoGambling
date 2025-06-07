@@ -31,6 +31,7 @@ public class CoinItem extends Item {
     }
 
     Integer streak = 0;
+    double successChance = 0;
     boolean wasHoldingCoin = false;
 
     private static final Set<RegistryEntry<StatusEffect>> REMOVABLE_EFFECTS = Set.of(
@@ -97,8 +98,8 @@ public class CoinItem extends Item {
         double successStreakScale = -0.04 * (streak); // -4% per streak
         double failureStreakScale = 0.02 * (streak); // 2% per streak
 
-        // Cap the success chance at 75%
-        double successChance = Math.min(0.75, baseSuccess + successStreakScale); // never above 75%
+        // Cap the success chance at 80%
+        successChance = Math.min(0.80, baseSuccess + successStreakScale); // never above 80%
 
 
         if (!world.isClient) {
@@ -371,6 +372,7 @@ public class CoinItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("tooltip.lets-go-gambling.coin"));
+        tooltip.add(Text.literal("Success chance: " + successChance));
         tooltip.add(Text.literal("Streak: " + streak));
         super.appendTooltip(stack, context, tooltip, type);
     }
